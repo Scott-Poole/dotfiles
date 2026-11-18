@@ -1,0 +1,43 @@
+# Copied to ~/.gitconfig by install.sh.
+[user]
+	name = Scott Poole
+	email = scotty_poole57@aol.com
+
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
+	last = log -1 HEAD
+	fa = fetch --all --tags --prune
+	dt = difftool
+	mt = mergetool
+	# Rewrite an author/committer field across history (prompts for confirmation):
+	#   git change-commits GIT_AUTHOR_EMAIL "old@example.com" "new@example.com"
+	#   git change-commits GIT_AUTHOR_EMAIL "old@example.com" "new@example.com" HEAD~10..HEAD
+	change-commits = "!f() { VAR1=$1; VAR='$'$1; OLD=$2; NEW=$3; echo \"Are you sure for replace $VAR  $OLD => $NEW ?(Y/N)\";read OK;if [ \"$OK\" = 'Y' ] ; then shift 3; git filter-branch  --env-filter \"if [ \\\"${VAR}\\\" = '$OLD' ]; then export $VAR1='$NEW';echo 'to $NEW'; fi\" $@; fi;};  f "
+
+[diff]
+	tool = meld
+[difftool]
+	prompt = false
+[difftool "meld"]
+	cmd = meld "$LOCAL" "$REMOTE"
+
+[merge]
+	tool = meld
+[mergetool "meld"]
+	# Choose one of these two lines (not both!)
+	cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+	#cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[init]
+	defaultBranch = main
+[core]
+	editor = nano --guidestripe=72
