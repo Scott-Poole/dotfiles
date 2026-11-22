@@ -41,3 +41,4 @@
 	defaultBranch = main
 [core]
 	editor = nano --guidestripe=72
+	pager = less -FRX

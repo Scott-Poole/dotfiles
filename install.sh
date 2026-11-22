@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Copy the dotfiles in this repo into $HOME according to the map below.
-# If a different file already exists, ask before replacing it; the old one is
+# Identical files are skipped silently. If a different file already exists,
+# ask before replacing it (answer "d" to see a diff first); the old one is
 # kept as <name>.bak.<timestamp>. Works on macOS (bash 3.2) and Linux.
 set -euo pipefail
 
@@ -11,6 +12,7 @@ STAMP="$(date +%Y%m%d%H%M%S)"
 MAP=(
   "git/gitconfig|.gitconfig"
   "git/gitk|.config/git/gitk"
+  "scripts/rmorig.sh|Scripts/rmorig.sh"
 )
 
 for entry in "${MAP[@]}"; do
@@ -25,7 +27,14 @@ for entry in "${MAP[@]}"; do
       echo "skip     $dest (exists; run interactively to replace)"
       continue
     fi
-    read -r -p "WARNING: $dest already exists and differs. Replace it? [y/N] " answer
+    answer=""
+    while :; do
+      read -r -p "WARNING: $dest already exists and differs. Replace it? [y/N/d=show diff] " answer
+      case "$answer" in
+        [dD]*) diff -u --label "installed: $dest" --label "repo: $src" "$dest" "$src" || true ;;
+        *) break ;;
+      esac
+    done
     case "$answer" in
       [yY]*) mv "$dest" "$dest.bak.$STAMP"; echo "backup   $dest.bak.$STAMP" ;;
       *) echo "skip     $dest"; continue ;;

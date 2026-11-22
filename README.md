@@ -11,8 +11,9 @@ git clone git@github.com:Scott-Poole/dotfiles.git ~/Projects/dotfiles
 ```
 
 `install.sh` copies the files below into `$HOME`. If a different file is
-already there it warns and asks before replacing it (the old one is kept as
-`<name>.bak.<timestamp>`); non-interactive runs skip those files. To add a new
+already there it warns and asks before replacing it (answer `d` to see a diff
+first; the old one is kept as `<name>.bak.<timestamp>`). Identical files are
+skipped without prompting, and non-interactive runs skip differing files. To add a new
 dotfile, put it in the repo and add a line to the `MAP` at the top of
 `install.sh`.
 
@@ -21,10 +22,12 @@ dotfile, put it in the repo and add a line to the `MAP` at the top of
 | Path | Copied to | Notes |
 |------|-----------|-------|
 | `git/gitconfig` | `~/.gitconfig` | Name/email, aliases, meld as diff/merge tool, LFS, `main` default |
-| `git/gitk` | `~/.config/git/gitk` | gitk colors/layout (no window geometry) |
+| `git/gitk` | `~/.config/git/gitk` | gitk fonts/colors/layout |
 
 ## Notes
 
 - Name/email live in `git/gitconfig`; edit the email there before running
   `install.sh` on a machine that needs a different one.
+- `~/Scripts` is expected to already be on `PATH`; `install.sh` only copies
+  files into it.
 - `meld` is the diff/merge tool: `brew install --cask meld` on macOS.
